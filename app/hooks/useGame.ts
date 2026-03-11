@@ -179,25 +179,43 @@ export function useGame() {
   const usePhone = useCallback(() => {
     if (state.usedLifelines.phone || !currentQuestion) return;
 
-    const correctAnswer =
-      lang === "ja"
-        ? currentQuestion.answers_ja[currentQuestion.correctIndex]
-        : currentQuestion.answers_en[currentQuestion.correctIndex];
+    const answers =
+      lang === "ja" ? currentQuestion.answers_ja : currentQuestion.answers_en;
+    const correctRate =
+      currentQuestion.difficulty === "easy"
+        ? 1.0
+        : currentQuestion.difficulty === "medium"
+          ? 0.85
+          : 0.7;
+    const isWrong = Math.random() >= correctRate;
+    let answer: string;
+    if (isWrong) {
+      const wrongIndices = [0, 1, 2, 3].filter(
+        (i) =>
+          i !== currentQuestion.correctIndex &&
+          !state.eliminatedAnswers.includes(i),
+      );
+      const wrongIndex =
+        wrongIndices[Math.floor(Math.random() * wrongIndices.length)];
+      answer = answers[wrongIndex];
+    } else {
+      answer = answers[currentQuestion.correctIndex];
+    }
     const hints =
       lang === "ja"
         ? [
-            `うーん、たぶん「${correctAnswer}」だと思うよ。`,
-            `私は「${correctAnswer}」だと確信しているわ！`,
-            `難しいけど...「${correctAnswer}」じゃないかな？`,
-            `調べたことがあるんだけど、「${correctAnswer}」が正解のはずだよ。`,
-            `自信はないけど、「${correctAnswer}」だと思う...`,
+            `うーん、たぶん「${answer}」だと思うよ。`,
+            `私は「${answer}」だと確信しているわ！`,
+            `難しいけど...「${answer}」じゃないかな？`,
+            `調べたことがあるんだけど、「${answer}」が正解のはずだよ。`,
+            `自信はないけど、「${answer}」だと思う...`,
           ]
         : [
-            `Hmm, I think it's "${correctAnswer}".`,
-            `I'm pretty sure it's "${correctAnswer}"!`,
-            `It's tough, but... I'd go with "${correctAnswer}".`,
-            `I've looked this up before — it should be "${correctAnswer}".`,
-            `I'm not 100% sure, but I think it's "${correctAnswer}"...`,
+            `Hmm, I think it's "${answer}".`,
+            `I'm pretty sure it's "${answer}"!`,
+            `It's tough, but... I'd go with "${answer}".`,
+            `I've looked this up before — it should be "${answer}".`,
+            `I'm not 100% sure, but I think it's "${answer}"...`,
           ];
     const hint = hints[Math.floor(Math.random() * hints.length)];
 
@@ -206,7 +224,12 @@ export function useGame() {
       usedLifelines: { ...prev.usedLifelines, phone: true },
       phoneHint: hint,
     }));
-  }, [state.usedLifelines.phone, currentQuestion, lang]);
+  }, [
+    state.usedLifelines.phone,
+    currentQuestion,
+    lang,
+    state.eliminatedAnswers,
+  ]);
 
   const useLifeline = useCallback(
     (type: LifelineType) => {
