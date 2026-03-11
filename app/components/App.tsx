@@ -2,6 +2,7 @@
 
 import { useState, useCallback } from "react";
 import { useGame } from "../hooks/useGame";
+import { useSoundEffect } from "../hooks/useSoundEffect";
 import StartScreen from "./StartScreen";
 import QuestionCard from "./QuestionCard";
 import PrizeTable from "./PrizeTable";
@@ -13,6 +14,13 @@ import ResultPopup from "./ResultPopup";
 
 function App() {
   const game = useGame();
+  const {
+    playCorrect,
+    playWrong,
+    playNextQuestion,
+    playFinalAnswer,
+    playSelect,
+  } = useSoundEffect();
   const [showAudience, setShowAudience] = useState(false);
   const [showPhone, setShowPhone] = useState(false);
   const [dropoutConfirm, setDropoutConfirm] = useState(false);
@@ -26,6 +34,19 @@ function App() {
     },
     [game],
   );
+
+  const handleSelectAnswer = useCallback(
+    (index: number) => {
+      playSelect();
+      game.selectAnswer(index);
+    },
+    [game, playSelect],
+  );
+
+  const handleConfirmFinalAnswer = useCallback(() => {
+    playFinalAnswer();
+    game.confirmFinalAnswer();
+  }, [game, playFinalAnswer]);
 
   if (game.gameStatus === "start") {
     return <StartScreen onStart={game.startGame} isLoading={game.isLoading} />;
@@ -75,7 +96,7 @@ function App() {
             selectedAnswer={game.selectedAnswer}
             isAnswerRevealed={game.isAnswerRevealed}
             eliminatedAnswers={game.eliminatedAnswers}
-            onSelectAnswer={game.selectAnswer}
+            onSelectAnswer={handleSelectAnswer}
           />
         )}
 
@@ -86,7 +107,7 @@ function App() {
               <div className="final-answer-buttons">
                 <button
                   className="final-answer-yes"
-                  onClick={game.confirmFinalAnswer}
+                  onClick={handleConfirmFinalAnswer}
                 >
                   ファイナルアンサー
                 </button>
@@ -105,7 +126,16 @@ function App() {
           <div className="next-action">
             <button
               className="next-button"
-              onClick={() => setShowResultPopup(true)}
+              onClick={() => {
+                const isCorrect =
+                  game.selectedAnswer === game.currentQuestion?.correctIndex;
+                if (isCorrect) {
+                  playCorrect();
+                } else {
+                  playWrong();
+                }
+                setShowResultPopup(true);
+              }}
             >
               {game.selectedAnswer === game.currentQuestion?.correctIndex
                 ? "次の問題へ"
@@ -130,6 +160,11 @@ function App() {
             questionNumber={game.currentQuestionIndex + 1}
             onNext={() => {
               setShowResultPopup(false);
+              const isCorrect =
+                game.selectedAnswer === game.currentQuestion?.correctIndex;
+              if (isCorrect) {
+                playNextQuestion();
+              }
               game.nextQuestion();
             }}
           />
