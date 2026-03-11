@@ -3,6 +3,7 @@
 import { useState, useCallback } from "react";
 import { useGame } from "../hooks/useGame";
 import { useSoundEffect } from "../hooks/useSoundEffect";
+import { PRIZE_TABLE } from "../data/prizes";
 import StartScreen from "./StartScreen";
 import QuestionCard from "./QuestionCard";
 import PrizeTable from "./PrizeTable";
@@ -154,7 +155,7 @@ function App() {
             }
             prizeName={
               game.selectedAnswer === game.currentQuestion.correctIndex
-                ? game.currentPrize
+                ? PRIZE_TABLE[game.currentQuestionIndex].amount
                 : game.guaranteedPrize
             }
             questionNumber={game.currentQuestionIndex + 1}

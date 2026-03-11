@@ -36,14 +36,31 @@ export function useSoundEffect() {
     [],
   );
 
-  // 正解: 明るい上昇アルペジオ（ド→ミ→ソ→高ド）
+  // 正解: ファンファーレ風の華やかな音
   const playCorrect = useCallback(() => {
     try {
       const ctx = getCtx();
       const now = ctx.currentTime;
-      const notes = [523.25, 659.25, 783.99, 1046.5];
-      notes.forEach((freq, i) => {
-        createTone(ctx, "sine", freq, now + i * 0.1, 0.5, 0.18);
+
+      // 第1打: 力強い和音（ド+ミ+ソ）
+      [523.25, 659.25, 783.99].forEach((freq) => {
+        createTone(ctx, "sine", freq, now, 0.6, 0.15);
+      });
+
+      // 第2打: 少し高い和音（ミ+ソ+高ド）
+      [659.25, 783.99, 1046.5].forEach((freq) => {
+        createTone(ctx, "sine", freq, now + 0.15, 0.5, 0.15);
+      });
+
+      // 第3打: 高い華やかな和音（ソ+高ド+高ミ）
+      [783.99, 1046.5, 1318.5].forEach((freq) => {
+        createTone(ctx, "sine", freq, now + 0.3, 0.7, 0.12);
+      });
+
+      // キラキラ感: 高い音のアルペジオ
+      const sparkle = [1568, 2093, 2637];
+      sparkle.forEach((freq, i) => {
+        createTone(ctx, "sine", freq, now + 0.45 + i * 0.08, 0.3, 0.06);
       });
     } catch {
       // 音声再生に失敗しても無視
