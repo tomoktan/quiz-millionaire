@@ -1,9 +1,12 @@
 export type Difficulty = "easy" | "medium" | "hard";
+export type Lang = "ja" | "en";
 
 export interface Question {
   id: number;
-  question: string;
-  answers: string[];
+  question_ja: string;
+  question_en: string;
+  answers_ja: string[];
+  answers_en: string[];
   correctIndex: number;
   difficulty: Difficulty;
 }

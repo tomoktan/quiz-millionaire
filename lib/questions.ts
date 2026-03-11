@@ -3,11 +3,16 @@ import { Question, Difficulty } from "@/app/types";
 
 interface QuestionRow {
   id: number;
-  question: string;
-  answer_a: string;
-  answer_b: string;
-  answer_c: string;
-  answer_d: string;
+  question_ja: string;
+  question_en: string;
+  answer_a_ja: string;
+  answer_a_en: string;
+  answer_b_ja: string;
+  answer_b_en: string;
+  answer_c_ja: string;
+  answer_c_en: string;
+  answer_d_ja: string;
+  answer_d_en: string;
   correct_index: number;
   difficulty: string;
 }
@@ -26,8 +31,20 @@ async function getRandomQuestions(
 
   return (rows as unknown as QuestionRow[]).map((row) => ({
     id: row.id,
-    question: row.question,
-    answers: [row.answer_a, row.answer_b, row.answer_c, row.answer_d],
+    question_ja: row.question_ja,
+    question_en: row.question_en,
+    answers_ja: [
+      row.answer_a_ja,
+      row.answer_b_ja,
+      row.answer_c_ja,
+      row.answer_d_ja,
+    ],
+    answers_en: [
+      row.answer_a_en,
+      row.answer_b_en,
+      row.answer_c_en,
+      row.answer_d_en,
+    ],
     correctIndex: row.correct_index,
     difficulty: row.difficulty as Difficulty,
   }));

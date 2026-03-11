@@ -1,5 +1,5 @@
 import { useState, useCallback, useMemo } from "react";
-import { Question, GameState, LifelineType } from "../types";
+import { Question, GameState, LifelineType, Lang } from "../types";
 import { PRIZE_TABLE } from "../data/prizes";
 
 const initialState: GameState = {
@@ -18,8 +18,23 @@ const initialState: GameState = {
 export function useGame() {
   const [state, setState] = useState<GameState>(initialState);
   const [questions, setQuestions] = useState<Question[]>([]);
+  const [lang, setLang] = useState<Lang>("ja");
 
   const currentQuestion = questions[state.currentQuestionIndex] ?? null;
+
+  const currentQuestionText = useMemo(() => {
+    if (!currentQuestion) return "";
+    return lang === "ja"
+      ? currentQuestion.question_ja
+      : currentQuestion.question_en;
+  }, [currentQuestion, lang]);
+
+  const currentAnswers = useMemo(() => {
+    if (!currentQuestion) return [];
+    return lang === "ja"
+      ? currentQuestion.answers_ja
+      : currentQuestion.answers_en;
+  }, [currentQuestion, lang]);
 
   const currentPrize = useMemo(() => {
     if (state.currentQuestionIndex === 0) return "0円";
@@ -35,7 +50,8 @@ export function useGame() {
     return "0円";
   }, [state.currentQuestionIndex]);
 
-  const startGame = useCallback(async () => {
+  const startGame = useCallback(async (startLang: Lang = "ja") => {
+    setLang(startLang);
     setState((prev) => ({ ...prev, isLoading: true }));
     try {
       const res = await fetch("/api/questions");
@@ -163,14 +179,26 @@ export function useGame() {
   const usePhone = useCallback(() => {
     if (state.usedLifelines.phone || !currentQuestion) return;
 
-    const correctAnswer = currentQuestion.answers[currentQuestion.correctIndex];
-    const hints = [
-      `うーん、たぶん「${correctAnswer}」だと思うよ。`,
-      `私は「${correctAnswer}」だと確信しているわ！`,
-      `難しいけど...「${correctAnswer}」じゃないかな？`,
-      `調べたことがあるんだけど、「${correctAnswer}」が正解のはずだよ。`,
-      `自信はないけど、「${correctAnswer}」だと思う...`,
-    ];
+    const correctAnswer =
+      lang === "ja"
+        ? currentQuestion.answers_ja[currentQuestion.correctIndex]
+        : currentQuestion.answers_en[currentQuestion.correctIndex];
+    const hints =
+      lang === "ja"
+        ? [
+            `うーん、たぶん「${correctAnswer}」だと思うよ。`,
+            `私は「${correctAnswer}」だと確信しているわ！`,
+            `難しいけど...「${correctAnswer}」じゃないかな？`,
+            `調べたことがあるんだけど、「${correctAnswer}」が正解のはずだよ。`,
+            `自信はないけど、「${correctAnswer}」だと思う...`,
+          ]
+        : [
+            `Hmm, I think it's "${correctAnswer}".`,
+            `I'm pretty sure it's "${correctAnswer}"!`,
+            `It's tough, but... I'd go with "${correctAnswer}".`,
+            `I've looked this up before — it should be "${correctAnswer}".`,
+            `I'm not 100% sure, but I think it's "${correctAnswer}"...`,
+          ];
     const hint = hints[Math.floor(Math.random() * hints.length)];
 
     setState((prev) => ({
@@ -178,7 +206,7 @@ export function useGame() {
       usedLifelines: { ...prev.usedLifelines, phone: true },
       phoneHint: hint,
     }));
-  }, [state.usedLifelines.phone, currentQuestion]);
+  }, [state.usedLifelines.phone, currentQuestion, lang]);
 
   const useLifeline = useCallback(
     (type: LifelineType) => {
@@ -204,7 +232,11 @@ export function useGame() {
 
   return {
     ...state,
+    lang,
+    setLang,
     currentQuestion,
+    currentQuestionText,
+    currentAnswers,
     currentPrize,
     guaranteedPrize,
     questions,

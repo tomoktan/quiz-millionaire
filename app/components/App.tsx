@@ -62,6 +62,7 @@ function App() {
         isDropout={isDropout}
         currentPrize={game.currentPrize}
         guaranteedPrize={game.guaranteedPrize}
+        lang={game.lang}
         onRestart={game.resetGame}
         selectedAnswer={game.selectedAnswer}
         correctIndex={game.currentQuestion?.correctIndex}
@@ -69,15 +70,25 @@ function App() {
     );
   }
 
+  const correctAnswer = game.currentQuestion
+    ? game.lang === "ja"
+      ? game.currentQuestion.answers_ja[game.currentQuestion.correctIndex]
+      : game.currentQuestion.answers_en[game.currentQuestion.correctIndex]
+    : "";
+
   return (
     <div className="game-screen">
-      <PrizeTable currentQuestionIndex={game.currentQuestionIndex} />
+      <PrizeTable
+        currentQuestionIndex={game.currentQuestionIndex}
+        lang={game.lang}
+      />
       <div className="game-main">
         <div className="game-header">
           <Lifelines
             usedLifelines={game.usedLifelines}
             onUseLifeline={handleUseLifeline}
             disabled={game.selectedAnswer !== null || game.isAnswerRevealed}
+            lang={game.lang}
           />
           <div className="game-actions">
             {!game.isAnswerRevealed && game.selectedAnswer === null && (
@@ -85,7 +96,7 @@ function App() {
                 className="dropout-button"
                 onClick={() => setDropoutConfirm(true)}
               >
-                ドロップアウト
+                {game.lang === "ja" ? "ドロップアウト" : "Drop Out"}
               </button>
             )}
           </div>
@@ -93,10 +104,12 @@ function App() {
 
         {game.currentQuestion && (
           <QuestionCard
-            question={game.currentQuestion}
+            questionText={game.currentQuestionText}
+            answers={game.currentAnswers}
             questionNumber={game.currentQuestionIndex + 1}
             selectedAnswer={game.selectedAnswer}
             isAnswerRevealed={game.isAnswerRevealed}
+            correctIndex={game.currentQuestion.correctIndex}
             eliminatedAnswers={game.eliminatedAnswers}
             onSelectAnswer={handleSelectAnswer}
           />
@@ -105,19 +118,21 @@ function App() {
         {game.showFinalAnswer && (
           <div className="final-answer-overlay">
             <div className="final-answer-dialog">
-              <p className="final-answer-text">ファイナルアンサー？</p>
+              <p className="final-answer-text">
+                {game.lang === "ja" ? "ファイナルアンサー？" : "Final Answer?"}
+              </p>
               <div className="final-answer-buttons">
                 <button
                   className="final-answer-yes"
                   onClick={handleConfirmFinalAnswer}
                 >
-                  ファイナルアンサー
+                  {game.lang === "ja" ? "ファイナルアンサー" : "Final Answer"}
                 </button>
                 <button
                   className="final-answer-no"
                   onClick={game.cancelFinalAnswer}
                 >
-                  やめる
+                  {game.lang === "ja" ? "やめる" : "Cancel"}
                 </button>
               </div>
             </div>
@@ -140,8 +155,12 @@ function App() {
               }}
             >
               {game.selectedAnswer === game.currentQuestion?.correctIndex
-                ? "次の問題へ"
-                : "結果を見る"}
+                ? game.lang === "ja"
+                  ? "次の問題へ"
+                  : "Next Question"
+                : game.lang === "ja"
+                  ? "結果を見る"
+                  : "See Results"}
             </button>
           </div>
         )}
@@ -151,15 +170,14 @@ function App() {
             isCorrect={
               game.selectedAnswer === game.currentQuestion.correctIndex
             }
-            correctAnswer={
-              game.currentQuestion.answers[game.currentQuestion.correctIndex]
-            }
+            correctAnswer={correctAnswer}
             prizeName={
               game.selectedAnswer === game.currentQuestion.correctIndex
                 ? PRIZE_TABLE[game.currentQuestionIndex].amount
                 : game.guaranteedPrize
             }
             questionNumber={game.currentQuestionIndex + 1}
+            lang={game.lang}
             onNext={() => {
               setShowResultPopup(false);
               const isCorrect =
@@ -171,6 +189,21 @@ function App() {
             }}
           />
         )}
+
+        <div className="lang-toggle-footer">
+          <button
+            className={`lang-toggle-button ${game.lang === "ja" ? "active" : ""}`}
+            onClick={() => game.setLang("ja")}
+          >
+            日本語
+          </button>
+          <button
+            className={`lang-toggle-button ${game.lang === "en" ? "active" : ""}`}
+            onClick={() => game.setLang("en")}
+          >
+            English
+          </button>
+        </div>
       </div>
 
       {showAudience && game.audienceResults && (
@@ -194,10 +227,12 @@ function App() {
             onClick={(e) => e.stopPropagation()}
           >
             <p className="final-answer-text">
-              ドロップアウトしますか？
+              {game.lang === "ja"
+                ? "ドロップアウトしますか？"
+                : "Are you sure you want to drop out?"}
               <br />
               <span className="dropout-prize">
-                獲得賞金: {game.currentPrize}
+                {game.lang === "ja" ? "獲得賞金" : "Prize"}: {game.currentPrize}
               </span>
             </p>
             <div className="final-answer-buttons">
@@ -208,13 +243,13 @@ function App() {
                   game.dropout();
                 }}
               >
-                ドロップアウト
+                {game.lang === "ja" ? "ドロップアウト" : "Drop Out"}
               </button>
               <button
                 className="final-answer-no"
                 onClick={() => setDropoutConfirm(false)}
               >
-                続ける
+                {game.lang === "ja" ? "続ける" : "Continue"}
               </button>
             </div>
           </div>

@@ -1,16 +1,30 @@
-import { LifelineType } from "../types";
+import { LifelineType, Lang } from "../types";
 
 interface LifelinesProps {
   usedLifelines: Record<LifelineType, boolean>;
   onUseLifeline: (type: LifelineType) => void;
   disabled: boolean;
+  lang: Lang;
 }
 
-function Lifelines({ usedLifelines, onUseLifeline, disabled }: LifelinesProps) {
+function Lifelines({
+  usedLifelines,
+  onUseLifeline,
+  disabled,
+  lang,
+}: LifelinesProps) {
   const lifelines: { type: LifelineType; label: string; icon: string }[] = [
     { type: "fiftyFifty", label: "50:50", icon: "50:50" },
-    { type: "audience", label: "オーディエンス", icon: "👥" },
-    { type: "phone", label: "テレフォン", icon: "📞" },
+    {
+      type: "audience",
+      label: lang === "ja" ? "オーディエンス" : "Audience",
+      icon: "👥",
+    },
+    {
+      type: "phone",
+      label: lang === "ja" ? "テレフォン" : "Phone",
+      icon: "📞",
+    },
   ];
 
   return (

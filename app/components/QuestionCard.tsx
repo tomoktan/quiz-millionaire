@@ -1,10 +1,10 @@
-import { Question } from "../types";
-
 interface QuestionCardProps {
-  question: Question;
+  questionText: string;
+  answers: string[];
   questionNumber: number;
   selectedAnswer: number | null;
   isAnswerRevealed: boolean;
+  correctIndex: number;
   eliminatedAnswers: number[];
   onSelectAnswer: (index: number) => void;
 }
@@ -12,10 +12,12 @@ interface QuestionCardProps {
 const ANSWER_LABELS = ["A", "B", "C", "D"];
 
 function QuestionCard({
-  question,
+  questionText,
+  answers,
   questionNumber,
   selectedAnswer,
   isAnswerRevealed,
+  correctIndex,
   eliminatedAnswers,
   onSelectAnswer,
 }: QuestionCardProps) {
@@ -28,7 +30,7 @@ function QuestionCard({
     }
 
     if (isAnswerRevealed) {
-      if (index === question.correctIndex) {
+      if (index === correctIndex) {
         classes.push("correct");
       } else if (index === selectedAnswer) {
         classes.push("wrong");
@@ -43,9 +45,9 @@ function QuestionCard({
   return (
     <div className="question-card">
       <div className="question-number">Q{questionNumber}</div>
-      <div className="question-text">{question.question}</div>
+      <div className="question-text">{questionText}</div>
       <div className="answers-grid">
-        {question.answers.map((answer, index) => (
+        {answers.map((answer, index) => (
           <button
             key={index}
             className={getAnswerClass(index)}

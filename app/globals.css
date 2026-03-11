@@ -56,8 +56,38 @@ body {
 .start-description {
   font-size: 1.1rem;
   color: #8ba4c4;
-  margin-bottom: 48px;
+  margin-bottom: 32px;
   line-height: 1.8;
+}
+
+.lang-selector {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 32px;
+}
+
+.lang-button {
+  background: transparent;
+  border: 1px solid #3a5a8a;
+  color: #8ba4c4;
+  padding: 8px 24px;
+  border-radius: 24px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.lang-button:hover {
+  border-color: #ffd700;
+  color: #ffd700;
+}
+
+.lang-button.active {
+  background: linear-gradient(135deg, #1a3a6b 0%, #0d2240 100%);
+  border-color: #ffd700;
+  color: #ffd700;
+  font-weight: 600;
 }
 
 .start-button {
@@ -108,7 +138,39 @@ body {
 
 .game-actions {
   display: flex;
+  align-items: stretch;
   gap: 12px;
+}
+
+.lang-toggle-footer {
+  display: flex;
+  justify-content: center;
+  gap: 8px;
+  padding: 12px 0;
+  margin-top: auto;
+}
+
+.lang-toggle-button {
+  background: transparent;
+  border: 1px solid #3a5a8a;
+  color: #8ba4c4;
+  padding: 4px 16px;
+  border-radius: 16px;
+  font-size: 0.8rem;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.lang-toggle-button:hover {
+  border-color: #ffd700;
+  color: #ffd700;
+}
+
+.lang-toggle-button.active {
+  background: linear-gradient(135deg, #1a3a6b 0%, #0d2240 100%);
+  border-color: #ffd700;
+  color: #ffd700;
+  font-weight: 600;
 }
 
 /* ===== ライフライン ===== */

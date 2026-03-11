@@ -1,11 +1,13 @@
 import { useRef, useEffect } from "react";
 import { PRIZE_TABLE } from "../data/prizes";
+import { Lang } from "../types";
 
 interface PrizeTableProps {
   currentQuestionIndex: number;
+  lang: Lang;
 }
 
-function PrizeTable({ currentQuestionIndex }: PrizeTableProps) {
+function PrizeTable({ currentQuestionIndex, lang }: PrizeTableProps) {
   const stepperRef = useRef<HTMLDivElement>(null);
 
   // 現在のステップが見えるようにスクロール
@@ -25,7 +27,9 @@ function PrizeTable({ currentQuestionIndex }: PrizeTableProps) {
     <>
       {/* PC版: 従来の縦テーブル */}
       <div className="prize-table">
-        <h3 className="prize-table-title">賞金一覧</h3>
+        <h3 className="prize-table-title">
+          {lang === "ja" ? "賞金一覧" : "Prize Table"}
+        </h3>
         <ul className="prize-list">
           {[...PRIZE_TABLE].reverse().map((prize, reverseIndex) => {
             const index = PRIZE_TABLE.length - 1 - reverseIndex;
