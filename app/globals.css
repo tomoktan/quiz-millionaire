@@ -768,26 +768,150 @@ body {
   }
 }
 
+/* ===== 横スクロールステッパー（デフォルト非表示） ===== */
+.prize-stepper-wrapper {
+  display: none;
+}
+
 /* ===== レスポンシブ ===== */
 @media (max-width: 768px) {
   .game-screen {
-    flex-direction: column-reverse;
+    flex-direction: column;
     padding: 12px;
   }
 
+  /* PC版テーブルを隠す */
   .prize-table {
+    display: none;
+  }
+
+  /* スマホ版ステッパーを表示 */
+  .prize-stepper-wrapper {
+    display: block;
     width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    -webkit-overflow-scrolling: touch;
+    padding: 8px 0;
+    scrollbar-width: none;
   }
 
-  .prize-list {
-    flex-direction: row;
-    flex-wrap: wrap;
+  .prize-stepper-wrapper::-webkit-scrollbar {
+    display: none;
+  }
+
+  .prize-stepper {
+    display: flex;
+    align-items: flex-start;
+    padding: 4px 16px;
+    min-width: max-content;
+  }
+
+  .step {
+    display: flex;
+    align-items: center;
+    position: relative;
+  }
+
+  .step-line {
+    width: 24px;
+    height: 2px;
+    background: #2a4a7a;
+    flex-shrink: 0;
+  }
+
+  .step-line.cleared {
+    background: #00cc44;
+  }
+
+  .step-node {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
     gap: 4px;
+    flex-shrink: 0;
   }
 
-  .prize-item {
+  .step-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: #1a2d4d;
+    border: 2px solid #2a4a7a;
+    transition: all 0.3s ease;
+  }
+
+  .step.cleared .step-dot {
+    background: #00cc44;
+    border-color: #00cc44;
+    box-shadow: 0 0 6px rgba(0, 204, 68, 0.4);
+  }
+
+  .step.current .step-dot {
+    width: 16px;
+    height: 16px;
+    background: #ffd700;
+    border-color: #ffd700;
+    box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
+    animation: stepPulse 1.5s ease infinite;
+  }
+
+  .step.safety-net:not(.cleared):not(.current) .step-dot {
+    border-color: #e0a840;
+  }
+
+  .step-label {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1px;
+    min-width: 48px;
+  }
+
+  .step-q {
+    font-size: 0.6rem;
+    font-weight: 700;
+    color: #4a6a8a;
+  }
+
+  .step-amount {
+    font-size: 0.65rem;
+    font-weight: 600;
+    color: #4a6a8a;
+    white-space: nowrap;
+  }
+
+  .step.cleared .step-q,
+  .step.cleared .step-amount {
+    color: #3a7a4a;
+  }
+
+  .step.current .step-q {
+    color: #ffd700;
     font-size: 0.7rem;
-    padding: 3px 6px;
+  }
+
+  .step.current .step-amount {
+    color: #ffd700;
+    font-size: 0.75rem;
+  }
+
+  .step.safety-net:not(.cleared):not(.current) .step-amount {
+    color: #e0a840;
+  }
+
+  .step.safety-net:not(.cleared):not(.current) .step-q {
+    color: #e0a840;
+  }
+
+  @keyframes stepPulse {
+    0%,
+    100% {
+      box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+    }
+    50% {
+      box-shadow: 0 0 16px rgba(255, 215, 0, 0.7);
+    }
   }
 
   .answers-grid {
