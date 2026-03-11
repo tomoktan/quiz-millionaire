@@ -9,12 +9,14 @@ import Lifelines from "./Lifelines";
 import AudienceChart from "./AudienceChart";
 import PhoneHint from "./PhoneHint";
 import ResultScreen from "./ResultScreen";
+import ResultPopup from "./ResultPopup";
 
 function App() {
   const game = useGame();
   const [showAudience, setShowAudience] = useState(false);
   const [showPhone, setShowPhone] = useState(false);
   const [dropoutConfirm, setDropoutConfirm] = useState(false);
+  const [showResultPopup, setShowResultPopup] = useState(false);
 
   const handleUseLifeline = useCallback(
     (type: "fiftyFifty" | "audience" | "phone") => {
@@ -99,14 +101,38 @@ function App() {
           </div>
         )}
 
-        {game.isAnswerRevealed && (
+        {game.isAnswerRevealed && !showResultPopup && (
           <div className="next-action">
-            <button className="next-button" onClick={game.nextQuestion}>
+            <button
+              className="next-button"
+              onClick={() => setShowResultPopup(true)}
+            >
               {game.selectedAnswer === game.currentQuestion?.correctIndex
                 ? "次の問題へ"
                 : "結果を見る"}
             </button>
           </div>
+        )}
+
+        {showResultPopup && game.currentQuestion && (
+          <ResultPopup
+            isCorrect={
+              game.selectedAnswer === game.currentQuestion.correctIndex
+            }
+            correctAnswer={
+              game.currentQuestion.answers[game.currentQuestion.correctIndex]
+            }
+            prizeName={
+              game.selectedAnswer === game.currentQuestion.correctIndex
+                ? game.currentPrize
+                : game.guaranteedPrize
+            }
+            questionNumber={game.currentQuestionIndex + 1}
+            onNext={() => {
+              setShowResultPopup(false);
+              game.nextQuestion();
+            }}
+          />
         )}
       </div>
 
