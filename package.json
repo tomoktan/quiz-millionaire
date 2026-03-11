@@ -1,26 +1,23 @@
 {
-  "name": "quiz_-millionaire",
+  "name": "quiz-millionaire",
   "version": "1.0.0",
-  "main": "index.js",
+  "private": true,
   "scripts": {
-    "dev": "vite",
-    "build": "tsc --noEmit && vite build",
-    "preview": "vite preview"
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "seed": "npx tsx scripts/seed.ts"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "description": "",
   "dependencies": {
+    "@neondatabase/serverless": "^1.0.2",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "next": "^16.1.6",
     "react": "^19.2.4",
     "react-dom": "^19.2.4",
     "typescript": "^5.9.3"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^5.1.4",
-    "prettier": "^3.8.1",
-    "vite": "^7.3.1"
+    "prettier": "^3.8.1"
   }
 }

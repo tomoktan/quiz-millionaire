@@ -1,0 +1,17 @@
+export const PRIZE_TABLE = [
+  { amount: "1万円", value: 10000, isSafetyNet: false },
+  { amount: "2万円", value: 20000, isSafetyNet: false },
+  { amount: "3万円", value: 30000, isSafetyNet: false },
+  { amount: "5万円", value: 50000, isSafetyNet: false },
+  { amount: "10万円", value: 100000, isSafetyNet: true },
+  { amount: "15万円", value: 150000, isSafetyNet: false },
+  { amount: "25万円", value: 250000, isSafetyNet: false },
+  { amount: "50万円", value: 500000, isSafetyNet: false },
+  { amount: "75万円", value: 750000, isSafetyNet: false },
+  { amount: "100万円", value: 1000000, isSafetyNet: true },
+  { amount: "150万円", value: 1500000, isSafetyNet: false },
+  { amount: "250万円", value: 2500000, isSafetyNet: false },
+  { amount: "500万円", value: 5000000, isSafetyNet: false },
+  { amount: "750万円", value: 7500000, isSafetyNet: false },
+  { amount: "1000万円", value: 10000000, isSafetyNet: true },
+];
