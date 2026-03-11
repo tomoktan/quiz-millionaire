@@ -778,6 +778,7 @@ body {
   .game-screen {
     flex-direction: column;
     padding: 12px;
+    gap: 12px;
   }
 
   /* PC版テーブルを隠す */
@@ -792,8 +793,16 @@ body {
     overflow-x: auto;
     overflow-y: hidden;
     -webkit-overflow-scrolling: touch;
-    padding: 8px 0;
+    background: linear-gradient(
+      180deg,
+      rgba(13, 26, 46, 0.95) 0%,
+      rgba(6, 14, 26, 0.9) 100%
+    );
+    border: 1px solid rgba(42, 74, 122, 0.4);
+    border-radius: 12px;
+    padding: 12px 0;
     scrollbar-width: none;
+    backdrop-filter: blur(8px);
   }
 
   .prize-stepper-wrapper::-webkit-scrollbar {
@@ -802,9 +811,10 @@ body {
 
   .prize-stepper {
     display: flex;
-    align-items: flex-start;
-    padding: 4px 16px;
+    align-items: center;
+    padding: 0 20px;
     min-width: max-content;
+    gap: 0;
   }
 
   .step {
@@ -814,103 +824,117 @@ body {
   }
 
   .step-line {
-    width: 24px;
+    width: 20px;
     height: 2px;
-    background: #2a4a7a;
+    background: rgba(42, 74, 122, 0.6);
     flex-shrink: 0;
   }
 
   .step-line.cleared {
-    background: #00cc44;
+    background: linear-gradient(90deg, #00cc44, #00aa38);
   }
 
   .step-node {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 4px;
+    gap: 6px;
     flex-shrink: 0;
+    min-width: 44px;
   }
 
   .step-dot {
-    width: 12px;
-    height: 12px;
+    width: 10px;
+    height: 10px;
     border-radius: 50%;
-    background: #1a2d4d;
-    border: 2px solid #2a4a7a;
+    background: rgba(26, 45, 77, 0.6);
+    border: 1.5px solid rgba(42, 74, 122, 0.6);
     transition: all 0.3s ease;
   }
 
   .step.cleared .step-dot {
+    width: 10px;
+    height: 10px;
     background: #00cc44;
     border-color: #00cc44;
-    box-shadow: 0 0 6px rgba(0, 204, 68, 0.4);
   }
 
   .step.current .step-dot {
-    width: 16px;
-    height: 16px;
+    width: 14px;
+    height: 14px;
     background: #ffd700;
-    border-color: #ffd700;
-    box-shadow: 0 0 12px rgba(255, 215, 0, 0.5);
-    animation: stepPulse 1.5s ease infinite;
+    border: 2px solid rgba(255, 215, 0, 0.6);
+    box-shadow:
+      0 0 8px rgba(255, 215, 0, 0.4),
+      0 0 16px rgba(255, 215, 0, 0.15);
+    animation: stepGlow 2s ease-in-out infinite;
   }
 
   .step.safety-net:not(.cleared):not(.current) .step-dot {
-    border-color: #e0a840;
+    border-color: rgba(224, 168, 64, 0.5);
+    background: rgba(224, 168, 64, 0.15);
   }
 
   .step-label {
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1px;
-    min-width: 48px;
+    gap: 0;
   }
 
   .step-q {
-    font-size: 0.6rem;
-    font-weight: 700;
-    color: #4a6a8a;
+    font-size: 0.55rem;
+    font-weight: 600;
+    color: rgba(74, 106, 138, 0.7);
+    letter-spacing: 0.02em;
   }
 
   .step-amount {
-    font-size: 0.65rem;
+    font-size: 0.6rem;
     font-weight: 600;
-    color: #4a6a8a;
+    color: rgba(74, 106, 138, 0.7);
     white-space: nowrap;
   }
 
-  .step.cleared .step-q,
+  .step.cleared .step-q {
+    color: rgba(0, 204, 68, 0.6);
+  }
+
   .step.cleared .step-amount {
-    color: #3a7a4a;
+    color: rgba(0, 204, 68, 0.6);
   }
 
   .step.current .step-q {
     color: #ffd700;
-    font-size: 0.7rem;
+    font-size: 0.6rem;
+    font-weight: 700;
   }
 
   .step.current .step-amount {
     color: #ffd700;
-    font-size: 0.75rem;
-  }
-
-  .step.safety-net:not(.cleared):not(.current) .step-amount {
-    color: #e0a840;
+    font-size: 0.7rem;
+    font-weight: 700;
   }
 
   .step.safety-net:not(.cleared):not(.current) .step-q {
-    color: #e0a840;
+    color: rgba(224, 168, 64, 0.6);
   }
 
-  @keyframes stepPulse {
+  .step.safety-net:not(.cleared):not(.current) .step-amount {
+    color: rgba(224, 168, 64, 0.6);
+  }
+
+  @keyframes stepGlow {
     0%,
     100% {
-      box-shadow: 0 0 8px rgba(255, 215, 0, 0.4);
+      box-shadow:
+        0 0 6px rgba(255, 215, 0, 0.3),
+        0 0 12px rgba(255, 215, 0, 0.1);
     }
     50% {
-      box-shadow: 0 0 16px rgba(255, 215, 0, 0.7);
+      box-shadow:
+        0 0 10px rgba(255, 215, 0, 0.5),
+        0 0 20px rgba(255, 215, 0, 0.2);
     }
   }
 

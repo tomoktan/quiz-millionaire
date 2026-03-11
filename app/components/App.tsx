@@ -71,6 +71,7 @@ function App() {
 
   return (
     <div className="game-screen">
+      <PrizeTable currentQuestionIndex={game.currentQuestionIndex} />
       <div className="game-main">
         <div className="game-header">
           <Lifelines
@@ -171,8 +172,6 @@ function App() {
           />
         )}
       </div>
-
-      <PrizeTable currentQuestionIndex={game.currentQuestionIndex} />
 
       {showAudience && game.audienceResults && (
         <AudienceChart
